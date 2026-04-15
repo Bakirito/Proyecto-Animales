@@ -32,6 +32,7 @@ class MascotaPro:
         self.window.overrideredirect(True)
         self.window.attributes('-topmost', True)
         self.window.geometry("350x480+500+150") # Espacio extra para el botón
+        self.modo_movimiento_libre = True
 
         self.color_invisible = "#010101"
         self.window.config(bg=self.color_invisible)
@@ -84,6 +85,15 @@ class MascotaPro:
         )
 
         self.btn_tienda.pack(pady=15)
+
+        self.btn_posicion = tk.Button(
+            self.window,
+            text="📍 POSICIÓN",
+            command=self.mostrar_menu_posicion,
+            font=("Arial", 9, "bold"),
+            bg="#1e3a8a", fg="white", activebackground="#1e40af"
+        )
+        self.btn_posicion.pack(pady=5)
 
         # --- EVENTOS ---
         self.label_mascota.bind("<Button-3>", self.mostrar_menu)
@@ -296,10 +306,51 @@ class MascotaPro:
     def iniciar_arrastre(self, event): self.x, self.y = event.x, event.y
 
     def arrastrar(self, event):
+        if not self.modo_movimiento_libre:
+            return
 
         x, y = self.window.winfo_x() + (event.x - self.x), self.window.winfo_y() + (event.y - self.y)
 
         self.window.geometry(f"+{x}+{y}")
+
+    def obtener_posiciones_predefinidas(self):
+        self.window.update_idletasks()
+        ancho_pantalla = self.window.winfo_screenwidth()
+        alto_pantalla = self.window.winfo_screenheight()
+        ancho_ventana = self.window.winfo_width()
+        alto_ventana = self.window.winfo_height()
+        margen = 20
+
+        return {
+            "Superior izquierda": (margen, margen),
+            "Superior derecha": (ancho_pantalla - ancho_ventana - margen, margen),
+            "Inferior izquierda": (margen, alto_pantalla - alto_ventana - margen),
+            "Inferior derecha": (ancho_pantalla - ancho_ventana - margen, alto_pantalla - alto_ventana - margen),
+            "Centro": ((ancho_pantalla - ancho_ventana) // 2, (alto_pantalla - alto_ventana) // 2)
+        }
+
+    def aplicar_posicion_predefinida(self, nombre_posicion):
+        posiciones = self.obtener_posiciones_predefinidas()
+        x, y = posiciones[nombre_posicion]
+        self.window.geometry(f"+{x}+{y}")
+        self.modo_movimiento_libre = False
+
+    def activar_movimiento_libre(self):
+        self.modo_movimiento_libre = True
+
+    def mostrar_menu_posicion(self):
+        menu_posicion = Menu(self.window, tearoff=0)
+        for nombre in self.obtener_posiciones_predefinidas():
+            menu_posicion.add_command(
+                label=nombre,
+                command=lambda n=nombre: self.aplicar_posicion_predefinida(n)
+            )
+        menu_posicion.add_separator()
+        menu_posicion.add_command(label="Mover libremente", command=self.activar_movimiento_libre)
+
+        x_boton = self.btn_posicion.winfo_rootx()
+        y_boton = self.btn_posicion.winfo_rooty() + self.btn_posicion.winfo_height()
+        menu_posicion.post(x_boton, y_boton)
 
     def mostrar_menu(self, event):
         menu_cierre = Menu(self.window, tearoff=0)
