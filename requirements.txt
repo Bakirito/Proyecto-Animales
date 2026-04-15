@@ -1,0 +1,4 @@
+Pillow
+pynput
+
+Para instalar las dependencias de este proyecto en caso de eliminarse: pip install -r requirements.txt

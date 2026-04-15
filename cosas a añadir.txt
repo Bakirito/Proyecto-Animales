@@ -1,0 +1,27 @@
+añadir boton  para seleccionar la posicion de la mascota 
+y tambien la opcion para moverla libremente.
+
+arreglar el bug de saltar niveles, añadir monedas y cambiar la mascota
+
+agregar 10 mascotas con sus animaciones
+
+añadir nuevas misiones
+
+añadir mas metas
+
+mejorar diseño del perro
+
+diseñar una GUI 
+
+diseñar la tienda
+
+diseñar el logo de la miniatura y de las monedas
+
+añadir la tienda de accesorios como teclados, mouse, headset, PC (al lado de la mascota)
+
+diseñar la pagina web oficial 
+
+convertir el archivo a .exe
+
+subirlo a la pagina
+
